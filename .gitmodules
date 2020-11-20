@@ -6,8 +6,8 @@
 	url = https://github.com/lwip-tcpip/lwip.git
 [submodule "lib/sdl/SDL2"]
 	path = lib/sdl/SDL2
-	url = https://github.com/XboxDev/nxdk-sdl.git
-	branch = nxdk
+	url = https://github.com/fgsfdsfgs/nxdk-sdl.git
+	branch = pb-renderer
 [submodule "lib/pdclib"]
 	path = lib/pdclib
 	url = https://github.com/XboxDev/nxdk-pdclib.git
