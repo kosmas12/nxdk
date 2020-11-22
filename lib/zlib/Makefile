@@ -13,6 +13,8 @@ ZLIB_OBJS = $(addsuffix .obj, $(basename $(ZLIB_SRCS)))
 
 NXDK_CFLAGS += -I $(ZLIB_DIR) -DZ_SOLO
 
+LIB_DEPS += $(addsuffix .d, $(ZLIB_SRCS))
+
 $(NXDK_DIR)/lib/libzlib.lib: $(ZLIB_OBJS)
 
 main.exe: $(NXDK_DIR)/lib/libzlib.lib

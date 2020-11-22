@@ -2,6 +2,8 @@ SDL_TTF_DIR = $(NXDK_DIR)/lib/sdl/SDL_ttf
 SDL_TTF_SRCS += $(SDL_TTF_DIR)/SDL_ttf.c
 SDL_TTF_OBJS = $(addsuffix .obj, $(basename $(SDL_TTF_SRCS)))
 
+LIB_DEPS += $(addsuffix .d, $(SDL_TTF_SRCS))
+
 $(NXDK_DIR)/lib/libSDL_ttf.lib: $(SDL_TTF_OBJS)
 
 FREETYPE_DIR = $(NXDK_DIR)/lib/sdl/SDL_ttf/external/freetype-2.4.12
@@ -29,6 +31,8 @@ NXDK_CXXFLAGS += -I$(NXDK_DIR)/lib/sdl \
                  -I$(SDL_TTF_DIR) \
                  -I$(FREETYPE_DIR)/include \
                  -DXBOX
+
+LIB_DEPS += $(addsuffix .d, $(FREETYPE_SRCS))
 
 main.exe: $(NXDK_DIR)/lib/libSDL_ttf.lib $(NXDK_DIR)/lib/libfreetype.lib
 
@@ -64,6 +68,8 @@ LIBSDLIMAGE_SRCS = $(LIBSDLIMAGE_DIR)/IMG.c \
 LIBSDLIMAGE_OBJS = $(addsuffix .obj, $(basename $(LIBSDLIMAGE_SRCS)))
 NXDK_CFLAGS += -I$(NXDK_DIR)/lib/sdl/SDL2_image -DLOAD_BMP -DLOAD_GIF -DLOAD_JPG -DLOAD_LBM -DLOAD_PCX -DLOAD_PNG -DLOAD_PNM -DLOAD_TGA -DLOAD_XCF -DLOAD_XPM -DLOAD_XV -DLOAD_XXX
 NXDK_CXXFLAGS += -I$(NXDK_DIR)/lib/sdl/SDL2_image -DLOAD_BMP -DLOAD_GIF -DLOAD_JPG -DLOAD_LBM -DLOAD_PCX -DLOAD_PNG -DLOAD_PNM -DLOAD_TGA -DLOAD_XCF -DLOAD_XPM -DLOAD_XV -DLOAD_XXX
+
+LIB_DEPS += $(addsuffix .d, $(LIBSDLIMAGE_SRCS))
 
 $(NXDK_DIR)/lib/libSDL2_image.lib: $(LIBSDLIMAGE_OBJS)
 

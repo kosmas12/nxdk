@@ -20,6 +20,8 @@ LIBPNG_OBJS = $(addsuffix .obj, $(basename $(LIBPNG_SRCS)))
 
 NXDK_CFLAGS += -I$(LIBPNG_DIR) -I$(NXDK_DIR)/lib/libpng
 
+LIB_DEPS += $(addsuffix .d, $(LIBPNG_SRCS))
+
 $(NXDK_DIR)/lib/libpng.lib: $(LIBPNG_OBJS)
 
 main.exe: $(NXDK_DIR)/lib/libpng.lib

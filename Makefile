@@ -72,7 +72,7 @@ NXDK_LDFLAGS = -subsystem:windows -fixed -base:0x00010000 -entry:XboxCRTEntry \
 
 # Multithreaded LLD on Windows hang workaround
 ifneq (,$(findstring MINGW,$(UNAME_S)))
-NXDK_LDFLAGS += -threads:no
+NXDK_LDFLAGS += -threads:1
 endif
 
 ifeq ($(DEBUG),y)
@@ -195,7 +195,7 @@ $(EXTRACT_XISO):
 clean: $(CLEANRULES)
 	$(VE)rm -f $(TARGET) \
 	           main.exe main.exe.manifest main.lib \
-	           $(OBJS) $(SHADER_OBJS) $(DEPS) \
+	           $(OBJS) $(SHADER_OBJS) $(DEPS) $(LIB_DEPS) \
 	           $(GEN_XISO)
 
 .PHONY: distclean 
