@@ -179,7 +179,19 @@ static const int SCREEN_HEIGHT = 480;
 #define NUM_SPRITES 10
 #define MAX_SPEED   5
 
+static SDL_Window *window;
+static SDL_Renderer *renderer;
+static SDL_Joystick *joystick;
 static SDL_Rect *positions, *velocities;
+
+void
+cleanUp(void)
+{
+    if (joystick) SDL_JoystickClose(joystick);
+    if (renderer) SDL_DestroyRenderer(renderer);
+    if (window) SDL_DestroyWindow(window);
+    if (SDL_WasInit(0)) SDL_Quit();
+}
 
 SDL_Texture *
 LoadSprite(SDL_Renderer *renderer, char *file)
@@ -234,8 +246,14 @@ MoveSprites(SDL_Renderer * renderer, SDL_Texture * sprite)
     SDL_QueryTexture(sprite, NULL, NULL, &sprite_w, &sprite_h);
 
     /* Draw a gray background */
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(renderer, 0xA0, 0xA0, 0xA0, 0xFF);
     SDL_RenderClear(renderer);
+
+    /* Draw a red rectangle behind the sprites */
+    SDL_Rect test = { .x = 64, .y = 64, .w = 256, .h = 128 };
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xA0, 0xA0, 0xFF);
+    SDL_RenderFillRect(renderer, &test);
 
     /* Move the sprite, bounce at the wall, and draw */
     for (i = 0; i < NUM_SPRITES; ++i) {
@@ -256,6 +274,13 @@ MoveSprites(SDL_Renderer * renderer, SDL_Texture * sprite)
         SDL_RenderCopy(renderer, sprite, NULL, position);
     }
 
+    /* Draw an additive blue rectangle in front of the sprites */
+    test.x += 160;
+    test.y += 96;
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_ADD);
+    SDL_SetRenderDrawColor(renderer, 0x10, 0x10, 0xA0, 0xFF);
+    SDL_RenderFillRect(renderer, &test);
+
     /* Update the screen! */
     SDL_RenderPresent(renderer);
 }
@@ -264,8 +289,6 @@ void demo(void)
 {
     int i, done;
     const char *driver;
-    SDL_Window *window;
-    SDL_Renderer *renderer;
     SDL_Texture *sprite;
     int window_w, window_h;
     int sprite_w, sprite_h;
@@ -274,7 +297,7 @@ void demo(void)
     /* Enable standard application logging */
     SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
 
-    if (SDL_VideoInit(NULL) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize SDL video.\n");
         printSDLErrorAndReboot();
     }
@@ -286,20 +309,31 @@ void demo(void)
         SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH, SCREEN_HEIGHT,
         SDL_WINDOW_SHOWN);
-    if(window == NULL)
+    if (window == NULL)
     {
         debugPrint( "Window could not be created!\n");
-        SDL_VideoQuit();
+        cleanUp();
         printSDLErrorAndReboot();
     }
 
     /* Create the renderer */
-    renderer = SDL_CreateRenderer(window, -1, 0);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!renderer) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create renderer.\n");
-        SDL_VideoQuit();
+        cleanUp();
         printSDLErrorAndReboot();
     }
+
+    /* Open joystick, need to be able to quit somehow */
+    joystick = SDL_JoystickOpen(0);
+    if (!joystick) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't open joystick.\n");
+        cleanUp();
+        printSDLErrorAndReboot();
+    }
+
+    /* Enable joystick events */
+    SDL_JoystickEventState(SDL_ENABLE);
 
     /* Clear the window, load the sprite and go! */
     SDL_SetRenderDrawColor(renderer, 0xA0, 0xA0, 0xA0, 0xFF);
@@ -307,7 +341,8 @@ void demo(void)
 
     sprite = LoadSprite(renderer, "icon.bmp");
     if (!sprite) {
-        SDL_VideoQuit();
+        cleanUp();
+        SDL_Quit();
         printSDLErrorAndReboot();
     }
 
@@ -318,7 +353,7 @@ void demo(void)
     velocities = (SDL_Rect *) SDL_malloc(NUM_SPRITES * sizeof(SDL_Rect));
     if (!positions || !velocities) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Out of memory!\n");
-        SDL_VideoQuit();
+        cleanUp();
         printSDLErrorAndReboot();
     }
 
@@ -341,10 +376,15 @@ void demo(void)
         /* Check for events */
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
+            case SDL_JOYBUTTONDOWN:
+                /* If BACK was pressed, exit */
+                if (event.jbutton.button == 6)
+                    done = 1;
+                break;
             case SDL_WINDOWEVENT:
                 switch (event.window.event) {
                 case SDL_WINDOWEVENT_EXPOSED:
-                    SDL_SetRenderDrawColor(renderer, 0xA0, 0xA0, 0xA0, 0xFF);
+                    SDL_SetRenderDrawColor(renderer, 0xFF, 0xA0, 0xA0, 0xFF);
                     SDL_RenderClear(renderer);
                     break;
                 }
@@ -359,7 +399,8 @@ void demo(void)
         MoveSprites(renderer, sprite);
     }
 
-    SDL_VideoQuit();
+    cleanUp();
+    printSDLErrorAndReboot();
 }
 
 int main(void)
