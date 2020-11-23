@@ -93,6 +93,7 @@ OBJS = $(addsuffix .obj, $(basename $(SRCS)))
 
 ifneq ($(NXDK_CXX),)
 include $(NXDK_DIR)/lib/libcxx/Makefile.nxdk
+LIB_DEPS += $(addsuffix .d, $(LIBCXX_SRCS))
 endif
 
 ifneq ($(NXDK_NET),)
