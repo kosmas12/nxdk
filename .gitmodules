@@ -10,8 +10,8 @@
 	branch = pb-renderer
 [submodule "lib/pdclib"]
 	path = lib/pdclib
-	url = https://github.com/XboxDev/nxdk-pdclib.git
-	branch = nxdk
+	url = https://github.com/fgsfdsfgs/nxdk-pdclib.git
+	branch = float-fmt
 [submodule "lib/sdl/SDL_ttf"]
 	path = lib/sdl/SDL_ttf
 	url = https://github.com/SDL-mirror/SDL_ttf
