@@ -66,25 +66,6 @@ int rand_s (unsigned int *randomValue)
     return 0;
 }
 
-
-double strtod( const char * _PDCLIB_restrict nptr, char * * _PDCLIB_restrict endptr )
-{
-    assert(0);
-    return 0.0;
-}
-
-float strtof( const char * _PDCLIB_restrict nptr, char * * _PDCLIB_restrict endptr )
-{
-    assert(0);
-    return 0.0;
-}
-
-long double strtold( const char * _PDCLIB_restrict nptr, char * * _PDCLIB_restrict endptr )
-{
-    assert(0);
-    return 0.0;
-}
-
 int mbtowc (wchar_t *pwc, const char *string, size_t n)
 {
     assert(0);
