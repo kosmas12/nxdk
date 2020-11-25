@@ -5,6 +5,8 @@ PDCLIB_SRCS := \
 
 PDCLIB_OBJS = $(addsuffix .obj, $(basename $(PDCLIB_SRCS)))
 
+LIB_DEPS += $(addsuffix .d, $(PDCLIB_SRCS))
+
 $(NXDK_DIR)/lib/libpdclib.lib: $(PDCLIB_OBJS)
 
 main.exe: $(NXDK_DIR)/lib/libpdclib.lib
