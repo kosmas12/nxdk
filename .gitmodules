@@ -34,3 +34,6 @@
 [submodule "lib/sdl/SDL2_mixer/SDL_mixer"]
 	path = lib/sdl/SDL2_mixer/SDL_mixer
 	url = https://github.com/SDL-mirror/SDL_mixer.git
+[submodule "lib/pbgl"]
+	path = lib/pbgl
+	url = https://github.com/fgsfdsfgs/pbgl.git
