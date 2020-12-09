@@ -110,7 +110,7 @@ endif
 endif
 
 ifneq ($(NXDK_PBGL),)
-include $(NXDK_DIR)/lib/pbGL/Makefile
+include $(NXDK_DIR)/lib/pbgl/Makefile
 endif
 
 V = 0
