@@ -14,7 +14,7 @@
 	branch = float-fmt
 [submodule "lib/sdl/SDL_ttf"]
 	path = lib/sdl/SDL_ttf
-	url = https://github.com/SDL-mirror/SDL_ttf
+	url = https://github.com/SDL-mirror/SDL_ttf.git
 [submodule "lib/libcxx"]
 	path = lib/libcxx
 	url = https://github.com/XboxDev/nxdk-libcxx.git
